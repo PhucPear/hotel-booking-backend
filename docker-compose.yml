@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: hotel_booking_app
+    volumes:
+      - ./:/var/www
+    networks:
+      - hotel_network
+
+  nginx:
+    image: nginx:latest
+    container_name: hotel_booking_nginx
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - hotel_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: hotel_booking_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hotel_booking
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - hotel_network
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+networks:
+  hotel_network:
+
+volumes:
+  db_data:
