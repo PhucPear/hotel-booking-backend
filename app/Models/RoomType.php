@@ -18,24 +18,10 @@ class RoomType extends Model
         'description',
     ];
 
-    protected $casts = [
-        'price' => 'decimal:2',
-        'capacity' => 'integer',
-    ];
-
     protected $hidden = [
         'created_at',
         'updated_at',
     ];
-
-    protected $appends = [
-        'formatted_price',
-    ];
-
-    public function getFormattedPriceAttribute()
-    {
-        return number_format($this->price, 0, ',', '.') . ' VND';
-    }
 
     /**
      * Relationship: Room type has many rooms.

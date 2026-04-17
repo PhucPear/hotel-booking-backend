@@ -1,24 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Authentication;
+namespace App\Services;
 
-use App\Http\Controllers\BaseApiController;
+use App\Enums\ErrorCode;
+use App\Exceptions\AuthException;
+use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Services\AuthService;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\LoginRequest;
 
-class AuthController extends BaseApiController
+class AuthService
 {
-  protected $authService;
-
-  public function __construct(AuthService $authService)
-  {
-    $this->authService = $authService;
-  }
-
   // REGISTER
   public function register(Request $request)
   {
@@ -46,11 +38,20 @@ class AuthController extends BaseApiController
 
 
   // LOGIN
-  public function login(LoginRequest $request)
+  public function login(array $data)
   {
-    $data = $this->authService->login($request->validated());
+    $user = User::where('email', $data['email'])->first();
 
-    return $this->success($data, __('messages.auth.login_success'));
+    if (!$user || !Hash::check($data['password'], $user->password)) {
+      throw new AuthException(ErrorCode::AUTH_INVALID_CREDENTIALS);
+    }
+
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    return [
+      'access_token' => $token,
+      'user' => $user
+    ];
   }
 
 
@@ -78,5 +79,20 @@ class AuthController extends BaseApiController
         'email' => $request->user->email,
       ]
     ]);
+  }
+
+  public function loginWithGoogle($googleUser)
+  {
+    // xử lý google login
+  }
+
+  public function sendOtp($email)
+  {
+    // gửi OTP
+  }
+
+  public function verifyOtp($email, $otp)
+  {
+    // verify OTP
   }
 }

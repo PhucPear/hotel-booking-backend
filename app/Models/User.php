@@ -22,6 +22,11 @@ class User extends Authenticatable
         'role_id',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);
