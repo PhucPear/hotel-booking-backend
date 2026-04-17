@@ -1,5 +1,7 @@
 <?php
 
+use App\Exceptions\ApiExceptionHandler;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,13 +17,16 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
-    })
-    ->withMiddleware(function ($middleware) {
-        $middleware->appendToGroup('api', [
-            'throttle:api',
+
+        $middleware->prependToGroup('api', [
             \App\Http\Middleware\ForceJsonResponse::class,
+            \App\Http\Middleware\TraceIdMiddleware::class,
+            \App\Http\Middleware\LoggingMiddleware::class,
         ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (Throwable $e, Request $request) {
+            return ApiExceptionHandler::handle($e, $request);
+        });
     })->create();

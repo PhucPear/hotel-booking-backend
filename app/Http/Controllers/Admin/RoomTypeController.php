@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseApiController;
+use App\Http\Resources\RoomType\RoomTypeResource;
 use App\Models\RoomType;
 use Illuminate\Http\Request;
 
-class RoomTypeController extends Controller
+class RoomTypeController extends BaseApiController
 {
     // GET /api/room-types
     public function index()
     {
         $roomTypes = RoomType::with(['amenities', 'images'])->get();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'List room types',
-            'data' => $roomTypes
-        ]);
+        return $this->success(RoomTypeResource::collection($roomTypes), 'List room types');
     }
 
     // GET /api/room-types/{id}

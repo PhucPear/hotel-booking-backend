@@ -18,7 +18,8 @@ class CheckPermission
 
         if (!$user || !$user->hasPermission($permission)) {
             return response()->json([
-                'message' => 'Forbidden'
+                'message' => 'Forbidden',
+                'error_code' => 'AUTH_003'
             ], 403);
         }
 
