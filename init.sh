@@ -47,14 +47,16 @@ fi
 
 # chạy docker
 print_step "Building & starting containers"
-docker-compose -f $COMPOSE_FILE up -d --build
+docker compose -f "$COMPOSE_FILE" down -v
+docker compose -f "$COMPOSE_FILE" build
+docker compose -f "$COMPOSE_FILE" up -d
 
 print_step "Waiting for app to boot"
 sleep 10
 
 # setup laravel
 print_step "Installing dependencies & setup Laravel"
-docker exec hotel_booking_app bash -c "
+docker exec app_hotel_booking bash -c "
 composer install &&
 php artisan key:generate
 "
@@ -62,12 +64,17 @@ php artisan key:generate
 # dev vs prod
 if [ "$ENV" = "dev" ]; then
   print_step "Running migrations DEV only"
-  docker exec hotel_booking_app php artisan migrate
+  docker exec app_hotel_booking bash -c "
+  php artisan migrate &&
+  php artisan db:seed &&
+  php artisan optimize &&
+  composer dump-autoload -o
+  "
 fi
 
 if [ "$ENV" = "production" ]; then
   print_step "Optimizing Laravel (PROD)"
-  docker exec hotel_booking_app bash -c "
+  docker exec app_hotel_booking bash -c "
   php artisan config:cache &&
   php artisan route:cache &&
   php artisan view:cache

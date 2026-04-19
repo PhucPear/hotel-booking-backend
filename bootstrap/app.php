@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
+            'auto.authorize' => \App\Http\Middleware\AutoAuthorize::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
 

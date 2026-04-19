@@ -16,10 +16,14 @@ return new class extends Migration
             $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 12, 2);
             $table->foreignId('payment_method_id')->constrained();
-            $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
-            $table->string('transaction_code')->nullable();
+            $table->enum('status', ['pending', 'success', 'failed', 'cancelled'])->default('pending');
+            $table->string('transaction_code')->unique();
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
+
+            // Index
+            $table->index('status', 'idx_payments_status');
+            $table->index('paid_at', 'idx_payments_paid_at');
         });
     }
 

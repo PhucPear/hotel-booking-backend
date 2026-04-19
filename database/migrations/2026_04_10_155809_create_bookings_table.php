@@ -14,11 +14,18 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->date('check_in_date');
-            $table->date('check_out_date');
             $table->decimal('total_price', 12, 2)->default(0);
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->enum('status', [
+                'pending',
+                'confirmed',
+                'cancelled'
+            ])->default('pending');
+
             $table->timestamps();
+
+            // Index
+            $table->index('status', 'idx_bookings_status');
+            $table->index('created_at', 'idx_bookings_created');
         });
     }
 

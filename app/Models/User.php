@@ -4,13 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'users';
     protected $fillable = [
@@ -39,10 +40,10 @@ class User extends Authenticatable
 
     public function hasPermission($permissionName)
     {
-        return $this->role()
-            ->whereHas('permissions', function ($query) use ($permissionName) {
-                $query->where('name', $permissionName);
-            })
-            ->exists();
+        if ($this->role?->name === 'admin') {
+            return true;
+        }
+
+        return $this->role && $this->role->permissions->contains('name', $permissionName);
     }
 }
