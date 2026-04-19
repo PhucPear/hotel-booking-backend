@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Authentication;
 
 use App\Http\Controllers\BaseApiController;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\LoginRequest;
 
 class AuthController extends BaseApiController
 {

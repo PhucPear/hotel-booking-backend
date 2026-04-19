@@ -18,6 +18,10 @@ return new class extends Migration
             $table->integer('capacity');
             $table->text('description')->nullable();
             $table->timestamps();
+
+            // Index
+            $table->index('price', 'idx_room_type_price');
+            $table->index('capacity', 'idx_room_type_capacity');
         });
     }
 

@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->decimal('price', 10, 2)->default(0);
-            $table->string('type')->default('paid'); // free | paid
+            $table->boolean('is_free')->default(false); // free | paid
             $table->timestamps();
+
+            // Index
+            $table->index('price', 'idx_services_price');
         });
     }
 

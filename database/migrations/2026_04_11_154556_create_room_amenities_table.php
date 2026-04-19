@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('room_type_amenity', function (Blueprint $table) {
+        Schema::create('room_amenities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_type_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('room_id')->constrained()->cascadeOnDelete();
             $table->foreignId('amenity_id')->constrained()->cascadeOnDelete();
-            $table->unique(['room_type_id', 'amenity_id']);
+            $table->unique(['room_id', 'amenity_id']);
             $table->timestamps();
         });
     }

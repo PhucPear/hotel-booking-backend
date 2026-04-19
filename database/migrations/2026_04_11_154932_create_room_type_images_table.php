@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('image_url');
             $table->boolean('is_primary')->default(false); // ảnh chính
             $table->timestamps();
+
+            // Index
+            $table->index(['room_type_id', 'is_primary'], 'idx_room_type_primary');
         });
     }
 

@@ -23,17 +23,9 @@ class RoomType extends Model
         'updated_at',
     ];
 
-    /**
-     * Relationship: Room type has many rooms.
-     */
     public function rooms()
     {
-        return $this->hasMany(Room::class, 'room_type_id');
-    }
-
-    public function amenities()
-    {
-        return $this->belongsToMany(Amenity::class, 'room_type_amenity');
+        return $this->hasMany(Room::class);
     }
 
     public function images()

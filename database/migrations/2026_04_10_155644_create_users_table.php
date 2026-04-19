@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password')->nullable(); // 👈 cho login thường
-            $table->string('google_id')->unique()->nullable(); // 👈 login Google
+            $table->string('password')->nullable(); // login thường
+            $table->string('google_id')->unique()->nullable(); // login Google
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();

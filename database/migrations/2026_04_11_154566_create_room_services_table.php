@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('room_availability', function (Blueprint $table) {
+        Schema::create('room_services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('room_id')->constrained()->cascadeOnDelete();
-            $table->date('date');
-            $table->enum('status', ['available', 'booked', 'maintenance'])->default('available');
+            $table->foreignId('service_id')->constrained()->cascadeOnDelete();
+            $table->unique(['room_id', 'service_id']);
             $table->timestamps();
-            $table->unique(['room_id', 'date']); // cực kỳ quan trọng
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('room_availability');
+        Schema::dropIfExists('room_services');
     }
 };
