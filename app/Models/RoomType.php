@@ -30,11 +30,11 @@ class RoomType extends Model
 
     public function images()
     {
-        return $this->hasMany(RoomTypeImage::class);
+        return $this->hasMany(RoomTypeImage::class, 'room_type_id');
     }
 
     public function primaryImage()
     {
-        return $this->hasOne(RoomTypeImage::class)->where('is_primary', true);
+        return $this->belongsTo(RoomTypeImage::class, 'primary_image_id');
     }
 }

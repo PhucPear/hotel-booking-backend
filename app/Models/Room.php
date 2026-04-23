@@ -22,9 +22,9 @@ class Room extends Model
         'updated_at',
     ];
 
-    public function roomType()
+    public function type()
     {
-        return $this->belongsTo(RoomType::class);
+        return $this->belongsTo(RoomType::class, 'room_type_id');
     }
 
     public function amenities()
