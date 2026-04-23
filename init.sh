@@ -52,7 +52,7 @@ docker compose -f "$COMPOSE_FILE" build
 docker compose -f "$COMPOSE_FILE" up -d
 
 print_step "Waiting for app to boot"
-sleep 10
+sleep 6
 
 # setup laravel
 print_step "Installing dependencies & setup Laravel"
@@ -60,6 +60,9 @@ docker exec app_hotel_booking bash -c "
 composer install &&
 php artisan key:generate
 "
+
+# Setting permissions
+chmod -R 777 storage bootstrap/cache
 
 # dev vs prod
 if [ "$ENV" = "dev" ]; then

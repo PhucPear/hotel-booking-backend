@@ -10,6 +10,7 @@ class HttpHandler
         return response()->json([
             'status' => false,
             'message' => $e->getMessage() ?: 'HTTP error',
+            'error_code' => 'SYSTEM_001',
         ], $e->getStatusCode());
     }
 }

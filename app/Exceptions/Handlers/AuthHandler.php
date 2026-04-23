@@ -9,7 +9,8 @@ class AuthHandler
     {
         return response()->json([
             'status' => false,
-            'message' => 'Unauthenticated',
+            'message' => __('messages.auth.unauthorized'),
+            'error_code' => 'AUTH_001'
         ], 401);
     }
 }

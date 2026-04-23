@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Authentication\AuthController;
+use App\Http\Controllers\User\RoomController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,9 +28,9 @@ Route::prefix('v1')->group(function () {
     // });
 
 
-    Route::prefix('admin')->group(function () {
-        Route::apiResource('room-types', RoomTypeController::class);
-    });
+    // Route::prefix('admin')->group(function () {
+    //     Route::apiResource('room-types', RoomTypeController::class);
+    // });
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -41,13 +42,15 @@ Route::prefix('v1')->group(function () {
 
         // User
         Route::prefix('user')->group(function () {
-            Route::middleware(['auth', 'auto.authorize'])->group(function () {
-                // Route::apiResource('rooms', RoomController::class);
-                // Route::apiResource('bookings', BookingController::class);
+            Route::post('/rooms', [RoomController::class, 'index']);
+            
+            // Route::middleware(['auth', 'auto.authorize'])->group(function () {
+                
+            //     // Route::apiResource('bookings', BookingController::class);
 
-                // Route::post('/bookings/{booking}/approve', [BookingController::class, 'approve']);
-                // Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
-            });
+            //     // Route::post('/bookings/{booking}/approve', [BookingController::class, 'approve']);
+            //     // Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+            // });
         });
 
         // Admin / Staff

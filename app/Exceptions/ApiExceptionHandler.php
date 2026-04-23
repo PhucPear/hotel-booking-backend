@@ -11,7 +11,6 @@ use App\Exceptions\Handlers\ValidationHandler;
 use App\Exceptions\Handlers\HttpHandler;
 use App\Exceptions\Handlers\AuthHandler;
 use App\Exceptions\Handlers\BaseHandler;
-use Illuminate\Support\Str;
 
 class ApiExceptionHandler
 {

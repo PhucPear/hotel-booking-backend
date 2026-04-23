@@ -20,8 +20,10 @@ class RoomTypeResource extends JsonResource
             'price' => number_format($this->price, 0, ',', '.') . ' VND',
             'capacity' => $this->capacity,
             'description' => $this->description,
-            'amenities' => $this->amenities?->pluck('name')->toArray(),
-            'images' => $this->images?->pluck('image_url')->toArray(),
+            'primary_image' => [
+                'id' => $this->primary_image_id,
+                'image_url' => $this->primaryImage->image_url,
+            ],
         ];
     }
 }

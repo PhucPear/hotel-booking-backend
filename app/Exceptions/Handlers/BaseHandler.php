@@ -9,7 +9,8 @@ class BaseHandler
     {
         return response()->json([
             'status' => false,
-            'message' => 'Server error',
+            'message' => __('messages.system.error'),
+            'error_code' => 'SYSTEM_001',
         ], 500);
     }
 }

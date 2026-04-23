@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => bcrypt('qqqqqqqq'),
             'role_id' => Role::where('name', 'admin')->value('id'),
+            'google_id' => null,
         ]);
 
         User::factory()->create([
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
             'email' => 'user@gmail.com',
             'password' => bcrypt('qqqqqqqq'),
             'role_id' => Role::where('name', 'user')->value('id'),
+            'google_id' => null,
         ]);
 
         User::factory()->create([
@@ -33,6 +35,7 @@ class UserSeeder extends Seeder
             'email' => 'staff@gmail.com',
             'password' => bcrypt('qqqqqqqq'),
             'role_id' => Role::where('name', 'staff')->value('id'),
+            'google_id' => null,
         ]);
     }
 }

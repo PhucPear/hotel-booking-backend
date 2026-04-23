@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('capacity');
             $table->text('description')->nullable();
+            $table->unsignedBigInteger('primary_image_id')->nullable();
             $table->timestamps();
 
             // Index
