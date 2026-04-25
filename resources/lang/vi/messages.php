@@ -6,6 +6,8 @@ return [
         'invalid_credentials' => 'Sai email hoặc mật khẩu',
         'forbidden' => 'Không có quyền truy cập',
     ],
+    'not_found' => 'Không tìm thấy',
+    'method_not_allowed' => 'Phương thức không được phép',
     'system' => [
         'error' => 'Lỗi hệ thống',
     ],

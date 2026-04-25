@@ -18,8 +18,17 @@ class RoomController extends BaseApiController
 
     public function index(Request $request)
     {
-        $rooms = $this->roomService->getList($request);
+        $rooms = $this->roomService->getList($request->all());
 
         return $this->success(RoomResource::collection($rooms), __('messages.room.list_success'));
+    }
+
+    public function show($id)
+    {
+        $room = $this->roomService->getOne([
+            'id' => $id
+        ]);
+
+        return $this->success(RoomResource::make($room));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ErrorCode;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BaseApiController extends Controller
@@ -33,13 +34,15 @@ class BaseApiController extends Controller
     }
 
 
-    protected function error($message = 'Error', $code = 400, $errorCode = 'SYSTEM_001')
+    protected function error(ErrorCode $error)
     {
+        $traceId = request()->attributes->get('trace_id');
+
         return response()->json([
             'status' => false,
-            'message' => $message,
-            'error_code' => $errorCode,
-            'trace_id' => request()->attributes->get('trace_id'),
-        ], $code);
+            'message' => $error->message(),
+            'error_code' => $error->value,
+            'trace_id' => $traceId,
+        ], $error->status());
     }
 }
