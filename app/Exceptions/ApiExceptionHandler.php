@@ -29,7 +29,7 @@ class ApiExceptionHandler
             ], $e->getStatus());
         }
 
-        // Validation (có thể nâng cấp sau)
+        // Validation
         if ($e instanceof ValidationException) {
             return ValidationHandler::handle($e);
         }

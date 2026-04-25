@@ -1,17 +1,20 @@
 <?php
 namespace App\Exceptions\Handlers;
 
+use App\Enums\ErrorCode;
 use Illuminate\Validation\ValidationException;
 
 class ValidationHandler
 {
     public static function handle(ValidationException $e)
     {
+        $error = ErrorCode::VALIDATION_ERROR;
+
         return response()->json([
             'status' => false,
-            'message' => __('messages.validation.error'),
+            'message' =>  $error->message(),
             'errors' => $e->errors(),
-            'error_code' => 'VALIDATION_001',
-        ], 422);
+            'error_code' =>  $error->value,
+        ], $error->status());
     }
 }

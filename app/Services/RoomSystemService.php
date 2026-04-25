@@ -2,20 +2,30 @@
 
 namespace App\Services;
 
+use App\Enums\ErrorCode;
+use App\Exceptions\BaseApiException;
 use App\Models\Room;
+use App\Repositories\RoomRepository;
 
 class RoomSystemService
 {
-  public function getList($request)
-  {
-    $query = Room::query()
-      ->with([
-        'type',
-        'type.images',
-        'amenities',
-        'services'
-      ]);
+  public function __construct(
+    protected RoomRepository $roomRepository
+  ) {}
 
-    return $query->paginate(5);
+  public function getList(array $filters = [])
+  {
+    return $this->roomRepository->getList($filters);
+  }
+
+  public function getOne(array $filters)
+  {
+    $room = $this->roomRepository->getOne($filters);
+
+    if (!$room) {
+      throw new BaseApiException(ErrorCode::NOT_FOUND);
+    }
+
+    return $room;
   }
 }

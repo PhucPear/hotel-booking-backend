@@ -42,7 +42,7 @@ Route::prefix('v1')->group(function () {
 
         // User
         Route::prefix('user')->group(function () {
-            Route::post('/rooms', [RoomController::class, 'index']);
+            Route::apiResource('rooms', RoomController::class);
             
             // Route::middleware(['auth', 'auto.authorize'])->group(function () {
                 
