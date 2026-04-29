@@ -20,8 +20,8 @@ return new class extends Migration
                 'confirmed',
                 'cancelled'
             ])->default('pending');
-
             $table->timestamps();
+            $table->softDeletes();
 
             // Index
             $table->index('status', 'idx_bookings_status');

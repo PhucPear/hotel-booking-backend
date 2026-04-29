@@ -50,7 +50,14 @@ class AutoAuthorize
         }
 
         // 4. Lấy model instance nếu có (route model binding)
-        $model = collect($route->parameters())->first();
+        $model = null;
+
+        foreach ($route->parameters() as $param) {
+            if (is_object($param)) {
+                $model = $param;
+                break;
+            }
+        }
 
         // 5. Resolve model class
         $modelClass = $model
@@ -91,6 +98,20 @@ class AutoAuthorize
         }
 
         return $next($request);
+    }
+
+    // resolve model
+    protected function resolveModel($request)
+    {
+        $route = $request->route();
+
+        foreach ($route->parameters() as $param) {
+            if (is_object($param)) {
+                return $param;
+            }
+        }
+
+        return null;
     }
 
     // Detect custom action: approve, cancel...

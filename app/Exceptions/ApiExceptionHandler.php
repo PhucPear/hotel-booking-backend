@@ -41,6 +41,7 @@ class ApiExceptionHandler
 
         // HTTP (404, 403...)
         if ($e instanceof HttpExceptionInterface) {
+            dd($e);
             return HttpHandler::handle($e);
         }
 
