@@ -19,6 +19,9 @@ enum ErrorCode: string
 
     case METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED';
 
+    // BOOKING
+    case BOOKING_ROOM_NOT_AVAILABLE = 'BOOKING_001';
+
     public function message(): string
     {
         return match($this) {
@@ -29,12 +32,14 @@ enum ErrorCode: string
             self::NOT_FOUND => __('messages.not_found'),
             self::VALIDATION_ERROR => __('messages.validation.error'),
             self::METHOD_NOT_ALLOWED => __('messages.method_not_allowed'),
+            self::BOOKING_ROOM_NOT_AVAILABLE => __('messages.booking.room_not_available'),
         };
     }
 
     public function status(): int
     {
         return match($this) {
+            self::BOOKING_ROOM_NOT_AVAILABLE => 400,
             self::AUTH_INVALID_CREDENTIALS => 401,
             self::AUTH_UNAUTHORIZED => 401,
             self::AUTH_FORBIDDEN => 403,

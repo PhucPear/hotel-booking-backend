@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\Enums\ErrorCode;
 use App\Exceptions\BaseApiException;
-use App\Models\Room;
-use App\Repositories\RoomRepository;
+use App\Repositories\Eloquent\RoomRepository;
 
 class RoomSystemService
 {

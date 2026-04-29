@@ -12,11 +12,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            PermissionRoleSeeder::class,
-            UserSeeder::class,
-            RoomTypeSeeder::class,
-            RoomSystemSeeder::class,
-            RoomTypeImageSeeder::class,
+            // PermissionRoleSeeder::class,
+            // UserSeeder::class,
+            // RoomTypeSeeder::class,
+            // RoomSystemSeeder::class,
+            // RoomTypeImageSeeder::class,
         ]);
     }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('check_out_date');
             $table->decimal('price', 10, 2); // giá tại thời điểm đặt
             $table->timestamps();
+            $table->softDeletes();
 
             // Index check availability
             $table->index(['room_id', 'check_in_date', 'check_out_date'], 'idx_room_date');

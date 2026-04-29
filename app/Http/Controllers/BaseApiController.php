@@ -45,4 +45,9 @@ class BaseApiController extends Controller
             'trace_id' => $traceId,
         ], $error->status());
     }
+
+    protected function user()
+    {
+        return auth()->guard('sanctum')->user();
+    }
 }

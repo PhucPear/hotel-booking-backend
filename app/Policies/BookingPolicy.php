@@ -20,6 +20,11 @@ class BookingPolicy
         return $user->id === $booking->user_id;
     }
 
+    public function store(User $user, Booking $booking)
+    {
+        return $user->id === $booking->user_id;
+    }
+
     public function update(User $user, Booking $booking)
     {
         return $user->id === $booking->user_id;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Eloquent;
 
 use App\Models\Room;
 
@@ -41,6 +41,19 @@ class RoomRepository
     if (!empty($filters['capacity'])) {
       $query->whereHas('type', function ($q) use ($filters) {
         $q->where('capacity', '>=', $filters['capacity']);
+      });
+    }
+
+    // filter rooms available by check-in and check-out
+    if (!empty($filters['check_in']) && !empty($filters['check_out'])) {
+      $checkIn = $filters['check_in'];
+      $checkOut = $filters['check_out'];
+
+      $query->whereDoesntHave('bookingDetails', function ($q) use ($checkIn, $checkOut) {
+        $q->where(function ($sub) use ($checkIn, $checkOut) {
+          $sub->where('check_in_date', '<=', $checkOut)
+            ->where('check_out_date', '>=', $checkIn);
+        });
       });
     }
 
