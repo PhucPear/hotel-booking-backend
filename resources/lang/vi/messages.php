@@ -28,4 +28,7 @@ return [
         'list_success' => 'Lấy danh sách đặt phòng thành công',
         'room_not_available' => 'Phòng không có sẵn',
     ],
+    'rate_limit' => [
+        'too_many_requests' => 'Không thể thực hiện quá nhiều yêu cầu cùng lúc',
+    ],
 ];

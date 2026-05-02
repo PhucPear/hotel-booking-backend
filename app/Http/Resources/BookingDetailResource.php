@@ -20,7 +20,7 @@ class BookingDetailResource extends JsonResource
             'room_id' => $this->room_id,
             'check_in_date' => $this->check_in_date,
             'check_out_date' => $this->check_out_date,
-            'price' => $this->price,
+            'price' => number_format($this->price, 0, ',', '.') . ' VND',
         ];
     }
 }

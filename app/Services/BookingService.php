@@ -14,49 +14,51 @@ use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
-    protected $bookingRepo;
-    protected $cacheService;
-
     public function __construct(
-        BookingRepositoryInterface $bookingRepo,
-        CacheService $cacheService
-    ) {
-        $this->bookingRepo = $bookingRepo;
-        $this->cacheService = $cacheService;
-    }
+        protected BookingRepositoryInterface $bookingRepo,
+        protected CacheService $cacheService
+    ) {}
 
-    public function createBooking($data, $user)
+    public function createBooking($data, $userID)
     {
         return $this->cacheService
-            ->lock("booking_user_{$user}", 10)
-            ->block(5, function () use ($data) {
+            ->lock("booking_user_{$userID}", 10)
+            ->block(5, function () use ($data, $userID) {
 
                 DB::beginTransaction();
+
                 try {
                     $total = 0;
 
                     $booking = $this->bookingRepo->create([
-                        'user_id' => 1,
+                        'user_id' => $userID,
                         'status' => BookingStatus::PENDING,
                         'total_price' => 0
                     ]);
 
                     foreach ($data['rooms'] as $room) {
 
-                        if (!$this->isRoomAvailable(
+                        // check + lock DB
+                        $isAvailable = $this->checkAndLockRoom(
                             $room['room_id'],
                             $room['check_in'],
                             $room['check_out']
-                        )) {
+                        );
+
+                        if (!$isAvailable) {
+                            DB::rollBack();
+
                             throw new BaseApiException(ErrorCode::BOOKING_ROOM_NOT_AVAILABLE);
                         }
 
                         $days = Carbon::parse($room['check_in'])
                             ->diffInDays(Carbon::parse($room['check_out']));
 
-                        $roomModel = Room::with('type')->findOrFail($room['room_id']);
-                        $price = $roomModel->type->price * $days;
+                        $roomModel = Room::with('type')
+                            ->lockForUpdate()
+                            ->findOrFail($room['room_id']);
 
+                        $price = $roomModel->type->price * $days;
                         $total += $price;
 
                         BookingDetail::create([
@@ -80,7 +82,7 @@ class BookingService
                     DB::commit();
 
                     // event send mail to user after booking created
-                    //event(new BookingCreated($booking));
+                    event(new BookingCreated($booking));
 
                     return $booking;
                 } catch (\Throwable $e) {
@@ -91,22 +93,25 @@ class BookingService
     }
 
     // check room is available or not
-    public function isRoomAvailable($roomId, $checkIn, $checkOut)
+    private function buildConflictQuery($roomId, $checkIn, $checkOut)
     {
-        $key = "room_{$roomId}_{$checkIn}_{$checkOut}";
+        return BookingDetail::where('room_id', $roomId)
+            ->where(function ($query) use ($checkIn, $checkOut) {
+                $query->whereBetween('check_in_date', [$checkIn, $checkOut])
+                    ->orWhereBetween('check_out_date', [$checkIn, $checkOut])
+                    ->orWhere(function ($q) use ($checkIn, $checkOut) {
+                        $q->where('check_in_date', '<=', $checkIn)
+                            ->where('check_out_date', '>=', $checkOut);
+                    });
+            });
+    }
 
-        return $this->cacheService->remember($key, 60, function () use ($roomId, $checkIn, $checkOut) {
-            return !BookingDetail::where('room_id', $roomId)
-                ->where(function ($query) use ($checkIn, $checkOut) {
-                    $query->whereBetween('check_in_date', [$checkIn, $checkOut])
-                        ->orWhereBetween('check_out_date', [$checkIn, $checkOut])
-                        ->orWhere(function ($q) use ($checkIn, $checkOut) {
-                            $q->where('check_in_date', '<=', $checkIn)
-                                ->where('check_out_date', '>=', $checkOut);
-                        });
-                })
-                ->exists();
-        });
+    // check room is available or not (lock for update)
+    public function checkAndLockRoom($roomId, $checkIn, $checkOut)
+    {
+        return !$this->buildConflictQuery($roomId, $checkIn, $checkOut)
+            ->lockForUpdate()
+            ->exists();
     }
 
     public function getBooking($id)
