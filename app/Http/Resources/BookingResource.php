@@ -17,7 +17,7 @@ class BookingResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'total_price' => $this->total_price,
+            'total_price' => number_format($this->total_price, 0, ',', '.') . ' VND',
             'status' => $this->status,
             'created_at' => $this->created_at?->format('Y-m-d:H:i:s'),
             'details' => $this->details->map(function ($item) {

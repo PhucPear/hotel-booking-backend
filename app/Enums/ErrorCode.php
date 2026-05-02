@@ -22,6 +22,9 @@ enum ErrorCode: string
     // BOOKING
     case BOOKING_ROOM_NOT_AVAILABLE = 'BOOKING_001';
 
+    // RATE LIMIT
+    case TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS';
+
     public function message(): string
     {
         return match($this) {
@@ -33,6 +36,7 @@ enum ErrorCode: string
             self::VALIDATION_ERROR => __('messages.validation.error'),
             self::METHOD_NOT_ALLOWED => __('messages.method_not_allowed'),
             self::BOOKING_ROOM_NOT_AVAILABLE => __('messages.booking.room_not_available'),
+            self::TOO_MANY_REQUESTS => __('messages.rate_limit.too_many_requests'),
         };
     }
 
@@ -46,6 +50,7 @@ enum ErrorCode: string
             self::NOT_FOUND => 404,
             self::METHOD_NOT_ALLOWED => 405,
             self::VALIDATION_ERROR => 422,
+            self::TOO_MANY_REQUESTS => 429,
             self::SYSTEM_ERROR => 500,
         };
     }

@@ -28,4 +28,18 @@ class BookingRequest extends FormRequest
             'rooms.*.check_out' => 'required|date|after:check_in',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'rooms.*.room_id.required' => __('validation.required', ['attribute' => 'Phòng']),
+            'rooms.*.room_id.exists' => __('validation.room_id.exists'),
+            'rooms.*.check_in.required' => __('validation.required', ['attribute' => 'Ngày bắt đầu']),
+            'rooms.*.check_in.date' => __('validation.check_in.date'),
+            'rooms.*.check_in.after_or_equal' => __('validation.check_in.after_or_equal', ['attribute' => 'Ngày bắt đầu']),
+            'rooms.*.check_out.required' => __('validation.required', ['attribute' => 'Ngày kết thúc']),
+            'rooms.*.check_out.date' => __('validation.check_out.date'),
+            'rooms.*.check_out.after' => __('validation.check_out.after', ['attribute' => 'Ngày bắt đầu']),
+        ];
+    }
 }

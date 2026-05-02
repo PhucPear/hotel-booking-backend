@@ -16,12 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'auto.authorize' => \App\Http\Middleware\AutoAuthorize::class,
-            'permission' => \App\Http\Middleware\CheckPermission::class,
+            'auto.authorize' => \App\Http\Middleware\AutoAuthorizeMiddleware::class,
+            'permission' => \App\Http\Middleware\CheckPermissionMiddleware::class,
         ]);
 
         $middleware->prependToGroup('api', [
-            \App\Http\Middleware\ForceJsonResponse::class,
+            \App\Http\Middleware\ForceJsonResponseMiddleware::class,
             \App\Http\Middleware\TraceIdMiddleware::class,
             \App\Http\Middleware\LoggingMiddleware::class,
         ]);

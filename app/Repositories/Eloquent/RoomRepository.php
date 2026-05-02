@@ -50,10 +50,8 @@ class RoomRepository
       $checkOut = $filters['check_out'];
 
       $query->whereDoesntHave('bookingDetails', function ($q) use ($checkIn, $checkOut) {
-        $q->where(function ($sub) use ($checkIn, $checkOut) {
-          $sub->where('check_in_date', '<=', $checkOut)
-            ->where('check_out_date', '>=', $checkIn);
-        });
+        $q->where('check_in_date', '<=', $checkOut)
+          ->where('check_out_date', '>=', $checkIn);
       });
     }
 
@@ -61,6 +59,19 @@ class RoomRepository
     if (!empty($filters['keyword'])) {
       $query->where('name', 'like', '%' . $filters['keyword'] . '%');
     }
+
+    // sort
+    $query->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
+      ->select('rooms.*');
+
+    $sortMap = [
+      'price_asc'  => ['room_types.price', 'asc'],
+      'price_desc' => ['room_types.price', 'desc'],
+    ];
+
+    [$column, $direction] = $sortMap[$filters['sort_by'] ?? 'price_asc'];
+
+    $query->orderBy($column, $direction);
 
     return $query;
   }

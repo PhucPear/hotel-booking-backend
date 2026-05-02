@@ -11,6 +11,8 @@ use App\Exceptions\Handlers\ValidationHandler;
 use App\Exceptions\Handlers\HttpHandler;
 use App\Exceptions\Handlers\AuthHandler;
 use App\Exceptions\Handlers\BaseHandler;
+use App\Exceptions\Handlers\ThrottleHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 
 class ApiExceptionHandler
 {
@@ -18,7 +20,7 @@ class ApiExceptionHandler
     {
         // Trace id
         $traceId = $request->attributes->get('trace_id');
-        
+
         // Custom exception error_code
         if ($e instanceof BaseApiException) {
             return response()->json([
@@ -37,6 +39,11 @@ class ApiExceptionHandler
         // Auth Laravel
         if ($e instanceof AuthenticationException) {
             return AuthHandler::handle($e);
+        }
+
+        // Throttle
+        if ($e instanceof ThrottleRequestsException) {
+            return ThrottleHandler::handle($e);
         }
 
         // HTTP (404, 403...)
