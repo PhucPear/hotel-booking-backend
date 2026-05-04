@@ -25,6 +25,10 @@ enum ErrorCode: string
     // RATE LIMIT
     case TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS';
 
+    // IDEMPOTENCY
+    case IDEMPOTENCY_CONFLICT = 'IDEMPOTENCY_001';
+    case IDEMPOTENCY_PROCESSING = 'IDEMPOTENCY_002';
+
     public function message(): string
     {
         return match($this) {
@@ -37,6 +41,8 @@ enum ErrorCode: string
             self::METHOD_NOT_ALLOWED => __('messages.method_not_allowed'),
             self::BOOKING_ROOM_NOT_AVAILABLE => __('messages.booking.room_not_available'),
             self::TOO_MANY_REQUESTS => __('messages.rate_limit.too_many_requests'),
+            self::IDEMPOTENCY_CONFLICT => 'Idempotency key conflict',
+            self::IDEMPOTENCY_PROCESSING => 'Request is processing',
         };
     }
 
@@ -48,8 +54,10 @@ enum ErrorCode: string
             self::AUTH_UNAUTHORIZED => 401,
             self::AUTH_FORBIDDEN => 403,
             self::NOT_FOUND => 404,
+            self::IDEMPOTENCY_CONFLICT => 409,
             self::METHOD_NOT_ALLOWED => 405,
             self::VALIDATION_ERROR => 422,
+            self::IDEMPOTENCY_PROCESSING => 429,
             self::TOO_MANY_REQUESTS => 429,
             self::SYSTEM_ERROR => 500,
         };

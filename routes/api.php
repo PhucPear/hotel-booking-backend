@@ -49,7 +49,7 @@ Route::prefix('v1')->group(function () {
 
             Route::middleware(['auto.authorize'])->group(function () {
                 //Route::post('/bookings', [BookingController::class, 'store']);
-                Route::apiResource('bookings', BookingController::class)->middleware(['auth', 'throttle:booking']);
+                Route::apiResource('bookings', BookingController::class)->middleware(['idempotency', 'throttle:booking']);
 
                 // Route::post('/bookings/{booking}/approve', [BookingController::class, 'approve']);
                 // Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);

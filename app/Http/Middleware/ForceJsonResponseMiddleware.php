@@ -15,7 +15,10 @@ class ForceJsonResponseMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $request->headers->set('Accept', 'application/json');
+        $request->headers->add([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ]);
         
         return $next($request);
     }

@@ -2,18 +2,20 @@
 namespace App\Exceptions\Handlers;
 
 use App\Enums\ErrorCode;
-use Throwable;
 
 class BaseHandler
 {
-    public static function handle(Throwable $e)
+    public static function response(ErrorCode $error)
     {
-        $error = ErrorCode::SYSTEM_ERROR;
-
         return response()->json([
             'status' => false,
             'message' =>  $error->message(),
             'error_code' =>  $error->value,
         ], $error->status());
+    }
+
+    public static function handle($e)
+    {
+        return self::response(ErrorCode::SYSTEM_ERROR);
     }
 }
