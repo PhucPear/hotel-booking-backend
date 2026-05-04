@@ -4,10 +4,10 @@ namespace App\Exceptions\Handlers;
 
 use App\Enums\ErrorCode;
 
-class ThrottleHandler extends BaseHandler
+class IdempotencyProcessingHandler extends BaseHandler
 {
     public static function handle($e)
     {
-        return self::response(ErrorCode::TOO_MANY_REQUESTS);
+        return self::response(ErrorCode::IDEMPOTENCY_PROCESSING);
     }
 }

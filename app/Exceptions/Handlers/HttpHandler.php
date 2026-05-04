@@ -2,11 +2,10 @@
 namespace App\Exceptions\Handlers;
 
 use App\Enums\ErrorCode;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-class HttpHandler
+class HttpHandler extends BaseHandler
 {
-    public static function handle(HttpExceptionInterface $e)
+    public static function handle($e)
     {
         $status = $e->getStatusCode();
 
@@ -18,10 +17,6 @@ class HttpHandler
             default => ErrorCode::SYSTEM_ERROR,
         };
 
-        return response()->json([
-            'status' => false,
-            'message' => $e->getMessage(),
-            'error_code' => $error->value,
-        ], $status);
+        return self::response($error);
     }
 }

@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auto.authorize' => \App\Http\Middleware\AutoAuthorizeMiddleware::class,
             'permission' => \App\Http\Middleware\CheckPermissionMiddleware::class,
+            'idempotency' => \App\Http\Middleware\IdempotencyMiddleware::class,
         ]);
 
         $middleware->prependToGroup('api', [

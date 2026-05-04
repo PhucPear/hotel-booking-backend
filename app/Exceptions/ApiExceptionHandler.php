@@ -11,6 +11,9 @@ use App\Exceptions\Handlers\ValidationHandler;
 use App\Exceptions\Handlers\HttpHandler;
 use App\Exceptions\Handlers\AuthHandler;
 use App\Exceptions\Handlers\BaseHandler;
+use App\Exceptions\Handlers\IdempotencyConflictHandler;
+use App\Exceptions\IdempotencyProcessingException;
+use App\Exceptions\Handlers\IdempotencyProcessingHandler;
 use App\Exceptions\Handlers\ThrottleHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 
@@ -46,9 +49,17 @@ class ApiExceptionHandler
             return ThrottleHandler::handle($e);
         }
 
+        // Idempotency
+        if ($e instanceof IdempotencyProcessingException) {
+            return IdempotencyProcessingHandler::handle($e);
+        }
+
+        if ($e instanceof IdempotencyConflictException) {
+            return IdempotencyConflictHandler::handle($e);
+        }
+
         // HTTP (404, 403...)
         if ($e instanceof HttpExceptionInterface) {
-            dd($e);
             return HttpHandler::handle($e);
         }
 
